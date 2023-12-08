@@ -8,6 +8,7 @@ from datetime import datetime
 class MovieBaseSchema(BaseModel):
     title: str = Field(...)
     overview: str = Field(...)
+    homepage: Optional[str] = Field(None)
     genres: Optional[List[str]] = Field(None)
     runtime: Optional[int] = Field(None)
     release_date: Optional[datetime] = Field(None)
