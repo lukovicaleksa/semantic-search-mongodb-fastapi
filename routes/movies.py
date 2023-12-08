@@ -50,7 +50,7 @@ def update_movie_by_id(movie_id: str = Path(...), updated_movie: MovieBaseSchema
 
 
 @movies_router.put(path='/title/{movie_title}', response_description='Update movie by title', response_model=MovieSchema)
-def update_movie_by_id(movie_title: str = Path(...), updated_movie: MovieBaseSchema = Body(...)) -> MovieSchema:
+def update_movie_by_title(movie_title: str = Path(...), updated_movie: MovieBaseSchema = Body(...)) -> MovieSchema:
     existing_movie = db_movies_collection.find_one({'title': movie_title})
     if existing_movie:
         db_movies_collection.update_one({'title': movie_title}, {'$set': updated_movie.model_dump()})
@@ -69,7 +69,7 @@ def delete_movie_by_id(movie_id: str = Path(...)):
 
 
 @movies_router.delete(path='/title/{movie_title}', response_description='Delete movie by title', status_code=status.HTTP_204_NO_CONTENT)
-def delete_movie_by_id(movie_title: str = Path(...)):
+def delete_movie_by_title(movie_title: str = Path(...)):
     res = db_movies_collection.delete_one({'title': movie_title})
     if res.deleted_count == 0:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Movie not found')
