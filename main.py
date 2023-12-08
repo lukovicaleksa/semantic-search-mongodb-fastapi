@@ -8,7 +8,7 @@ app = FastAPI()
 
 
 @app.on_event("shutdown")
-def startup_event():
+def shutdown_event():
     """
     Shutdown Event is triggered
     """
