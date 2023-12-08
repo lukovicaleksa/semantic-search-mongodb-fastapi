@@ -15,7 +15,7 @@ class MongoDBAtlasConnection:
         :param host: Mongo DB Hostname
         :param db_name: DB name
         """
-        self.connection_str = f"mongodb+srv://{username}:{password}@{host}/?retryWrites=true&w=majority"
+        self.connection_str = f'mongodb+srv://{username}:{password}@{host}/?retryWrites=true&w=majority'
         self.db_name = db_name
         self.client = None
         self.db = None
@@ -33,7 +33,7 @@ class MongoDBAtlasConnection:
             # check connection by running a simple command
             self.client.admin.command('ismaster')
         except (ConnectionFailure, OperationFailure) as err:
-            raise ConnectionError(f"Failed to connect to database: {err}")
+            raise ConnectionError(f'Failed to connect to database: {err}')
 
     def get_db(self) -> database.Database:
         """

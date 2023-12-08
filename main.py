@@ -7,7 +7,7 @@ from routes.movies import movies_router
 app = FastAPI()
 
 
-@app.on_event("shutdown")
+@app.on_event('shutdown')
 def shutdown_event():
     """
     Shutdown Event is triggered
