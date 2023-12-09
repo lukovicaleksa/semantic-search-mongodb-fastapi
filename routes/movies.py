@@ -1,9 +1,11 @@
 from bson.objectid import ObjectId
-from fastapi import APIRouter, Body, Path, HTTPException, status
+from fastapi import APIRouter, Body, Path, Query, HTTPException, status
 from pymongo.errors import DuplicateKeyError
 
-from database.schemas import MovieBaseSchema, MovieWithEmbeddingSchema, MovieSchema
+from config import settings
 from database.collections import db_movies_collection
+from database.schemas import MovieBaseSchema, MovieWithEmbeddingSchema, MovieSchema, \
+    MoviesSemanticSearchPromptSchema, MoviesSemanticSearchResponseSchema
 
 
 movies_router = APIRouter(prefix='/movies', tags=['movies'])
@@ -90,3 +92,32 @@ def delete_movie_by_title(movie_title: str = Path(...)):
     res = db_movies_collection.delete_one({'title': movie_title})
     if res.deleted_count == 0:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Movie not found')
+
+
+@movies_router.get(path='/semantic-search', response_description='Semantic Search', response_model=MoviesSemanticSearchResponseSchema)
+def movies_semantic_search(prompt: str = Query(..., title='Search Prompt'),
+                           limit: int = Query(..., title='Limit returned documents')) -> MoviesSemanticSearchResponseSchema:
+    semantic_search_prompt = MoviesSemanticSearchPromptSchema(prompt=prompt, limit=limit)
+
+    # perform vector search
+    res = db_movies_collection.aggregate([
+        {
+            '$vectorSearch': {
+                'index': settings.MONGODB_ATLAS_MOVIES_VECTOR_SEARCH_INDEX_NAME,
+                'path': 'embedding',
+                'queryVector': semantic_search_prompt.generate_embedding_vector(),
+                'numCandidates': semantic_search_prompt.get_optimal_number_of_search_candidates(),
+                'limit': semantic_search_prompt.limit,
+            }
+        },
+        {
+            '$project': {
+                'title': 1,
+                'overview': 1,
+                'genres': 1
+            }
+        }
+    ])
+
+    movies_semantic_search_response = {'movies': [movie for movie in res]}
+    return MoviesSemanticSearchResponseSchema(**movies_semantic_search_response)

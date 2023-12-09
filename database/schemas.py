@@ -92,3 +92,44 @@ class MovieSchema(MovieBaseSchema):
             data['_id'] = str(data['_id'])
 
         super().__init__(**data)
+
+
+class MoviesSemanticSearchPromptSchema(BaseModel):
+    """
+    Prompt Schema for Movies Semantic Search
+    """
+    prompt: str = Field(...)
+    limit: int = Field(...)
+
+    def generate_embedding_vector(self) -> List[float]:
+        """
+        Generate prompt embedding vector
+
+        :return: Prompt embedding
+        """
+        prompt_embedding = embedding_model.encode(self.prompt, device=TorchDevice.CPU.value).tolist()
+        return prompt_embedding
+
+    def get_optimal_number_of_search_candidates(self) -> int:
+        """
+        Get optimal number of Vector search candidates.\n
+        Recommended by ANN search paper authors (used in MongoDB vector search algorithm), provides best latency-recall tradeoff
+
+        :return: Number of candidates
+        """
+        return 20 * self.limit
+
+
+class MoviesSemanticSearchResponseSchema(BaseModel):
+    """
+    Response Schema for Movies Semantic Search
+    """
+    class SimplifiedMovieSchema(BaseModel):
+        """
+        Simplified Movie Schema used for Semantic Search response
+        """
+        title: str = Field(...)
+        overview: str = Field(...)
+        genres: Optional[List[str]] = Field(None)
+
+    movies: List[SimplifiedMovieSchema] = Field(...)
