@@ -4,7 +4,8 @@ from typing import Dict
 from datetime import datetime
 
 from database.collections import db_movies_collection
-from database.schemas import MovieBaseSchema
+from database.schemas import MovieWithEmbeddingSchema
+from language_model import embedding_model
 
 
 def initialize_db_movies_collection_from_dataset() -> int:
@@ -25,10 +26,13 @@ def initialize_db_movies_collection_from_dataset() -> int:
     df['genres'] = df['genres'].apply(lambda x: [genre['name'] for genre in json.loads(x)])
     df['release_date'].fillna('', inplace=True)
     df['release_date'] = df['release_date'].apply(lambda x: datetime.strptime(x, '%Y-%m-%d') if x else '')
+    
+    # calculate embeddings
+    df['embedding'] = embedding_model.encode(df['title'].values + '. ' + df['overview'].values).tolist()
 
-    # convert dataframe to list of dictionaries using Movie Schema
+    # convert dataframe to list of dictionaries using Schema
     movies_data = [remove_empty_fields(movie) for movie in df.to_dict(orient='records')]
-    movies_data = [MovieBaseSchema(**data).model_dump() for data in movies_data]
+    movies_data = [MovieWithEmbeddingSchema(**data).model_dump() for data in movies_data]
 
     # empty movies collection
     db_movies_collection.delete_many({})
