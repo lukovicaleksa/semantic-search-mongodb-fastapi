@@ -4,15 +4,15 @@ from pymongo.errors import DuplicateKeyError
 
 from config import settings
 from database.collections import db_movies_collection
-from database.schemas import MovieBaseSchema, MovieWithEmbeddingSchema, MovieSchema, \
+from database.schemas import MovieBaseSchema, MovieWithEmbeddingSchema, MovieWithIDSchema, \
     MoviesSemanticSearchPromptSchema, MoviesSemanticSearchResponseSchema
 
 
 movies_router = APIRouter(prefix='/movies', tags=['movies'])
 
 
-@movies_router.post(path='/', response_description='Create a new movie', status_code=status.HTTP_201_CREATED, response_model=MovieSchema)
-def insert_movie(movie: MovieBaseSchema = Body(...)) -> MovieSchema:
+@movies_router.post(path='/', response_description='Create a new movie', status_code=status.HTTP_201_CREATED, response_model=MovieWithIDSchema)
+def insert_movie(movie: MovieBaseSchema = Body(...)) -> MovieWithIDSchema:
     # calculate movie embedding
     movie_with_embedding = MovieWithEmbeddingSchema.from_base_schema(movie)
     try:
@@ -23,33 +23,33 @@ def insert_movie(movie: MovieBaseSchema = Body(...)) -> MovieSchema:
     if res.inserted_id:
         # get inserted movie and return it
         inserted_movie = db_movies_collection.find_one({'_id': res.inserted_id})
-        return MovieSchema(**inserted_movie)
+        return MovieWithIDSchema(**inserted_movie)
     else:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Failed to insert movie')
 
 
-@movies_router.get(path='/id/{movie_id}', response_description='Get movie by ID', response_model=MovieSchema)
-def get_movie_by_id(movie_id: str = Path(...)) -> MovieSchema:
+@movies_router.get(path='/id/{movie_id}', response_description='Get movie by ID', response_model=MovieWithIDSchema)
+def get_movie_by_id(movie_id: str = Path(...)) -> MovieWithIDSchema:
     movie = db_movies_collection.find_one({'_id': ObjectId(movie_id)})
 
     if movie:
-        return MovieSchema(**movie)
+        return MovieWithIDSchema(**movie)
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Movie not found')
 
 
-@movies_router.get(path='/title/{movie_title}', response_description='Get movie by title', response_model=MovieSchema)
-def get_movie_by_title(movie_title: str = Path(...)) -> MovieSchema:
+@movies_router.get(path='/title/{movie_title}', response_description='Get movie by title', response_model=MovieWithIDSchema)
+def get_movie_by_title(movie_title: str = Path(...)) -> MovieWithIDSchema:
     movie = db_movies_collection.find_one({'title': movie_title})
 
     if movie:
-        return MovieSchema(**movie)
+        return MovieWithIDSchema(**movie)
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Movie not found')
 
 
-@movies_router.put(path='/id/{movie_id}', response_description='Update movie by ID', response_model=MovieSchema)
-def update_movie_by_id(movie_id: str = Path(...), updated_movie: MovieBaseSchema = Body(...)) -> MovieSchema:
+@movies_router.put(path='/id/{movie_id}', response_description='Update movie by ID', response_model=MovieWithIDSchema)
+def update_movie_by_id(movie_id: str = Path(...), updated_movie: MovieBaseSchema = Body(...)) -> MovieWithIDSchema:
     existing_movie = db_movies_collection.find_one({'_id': ObjectId(movie_id)})
 
     if existing_movie:
@@ -59,13 +59,13 @@ def update_movie_by_id(movie_id: str = Path(...), updated_movie: MovieBaseSchema
 
         # get updated movie and return it
         updated_movie = db_movies_collection.find_one({'_id': ObjectId(movie_id)})
-        return MovieSchema(**updated_movie)
+        return MovieWithIDSchema(**updated_movie)
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Movie not found')
 
 
-@movies_router.put(path='/title/{movie_title}', response_description='Update movie by title', response_model=MovieSchema)
-def update_movie_by_title(movie_title: str = Path(...), updated_movie: MovieBaseSchema = Body(...)) -> MovieSchema:
+@movies_router.put(path='/title/{movie_title}', response_description='Update movie by title', response_model=MovieWithIDSchema)
+def update_movie_by_title(movie_title: str = Path(...), updated_movie: MovieBaseSchema = Body(...)) -> MovieWithIDSchema:
     existing_movie = db_movies_collection.find_one({'title': movie_title})
 
     if existing_movie:
@@ -75,7 +75,7 @@ def update_movie_by_title(movie_title: str = Path(...), updated_movie: MovieBase
 
         # get updated movie and return it
         updated_movie = db_movies_collection.find_one({'_id': existing_movie['_id']})
-        return MovieSchema(**updated_movie)
+        return MovieWithIDSchema(**updated_movie)
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Movie not found')
 

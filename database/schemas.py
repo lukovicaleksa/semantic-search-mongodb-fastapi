@@ -80,7 +80,7 @@ class MovieWithEmbeddingSchema(MovieBaseSchema):
         return instance
 
 
-class MovieSchema(MovieBaseSchema):
+class MovieWithIDSchema(MovieBaseSchema):
     """
     Movie Schema with ID
     """
