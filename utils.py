@@ -8,6 +8,16 @@ from database.schemas import MovieWithEmbeddingSchema
 from language_model import embedding_model
 
 
+def is_db_movies_collection_initialized() -> bool:
+    """
+    Checks if the Movies collection is initialized.\n
+    For the sake of simplicity, collection is considered as initialized if it contains documents.
+
+    :return: True/False
+    """
+    return db_movies_collection.count_documents({}) > 0
+
+
 def initialize_db_movies_collection_from_dataset() -> int:
     """
     Initialize Movies collection using TMDB 5000 Movie Dataset from Kaggle (https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata)\n
