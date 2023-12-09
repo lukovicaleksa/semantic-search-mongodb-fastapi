@@ -1,5 +1,6 @@
 from bson.objectid import ObjectId
 from fastapi import APIRouter, Body, Path, HTTPException, status
+from pymongo.errors import DuplicateKeyError
 
 from database.schemas import MovieBaseSchema, MovieWithEmbeddingSchema, MovieSchema
 from database.collections import db_movies_collection
@@ -12,7 +13,10 @@ movies_router = APIRouter(prefix='/movies', tags=['movies'])
 def insert_movie(movie: MovieBaseSchema = Body(...)) -> MovieSchema:
     # calculate movie embedding
     movie_with_embedding = MovieWithEmbeddingSchema.from_base_schema(movie)
-    res = db_movies_collection.insert_one(movie_with_embedding.model_dump())
+    try:
+        res = db_movies_collection.insert_one(movie_with_embedding.model_dump())
+    except DuplicateKeyError:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Movie with the same title already exists')
 
     if res.inserted_id:
         # get inserted movie and return it

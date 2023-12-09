@@ -19,7 +19,10 @@ def initialize_db_movies_collection_from_dataset() -> int:
     df = pd.read_csv('data/tmdb_5000_movies.csv')
 
     # drop rows with missing mandatory data
-    df = df.dropna(subset=['title', 'overview'])
+    df.dropna(subset=['title', 'overview'], inplace=True)
+
+    # drop duplicate title rows
+    df.drop_duplicates(subset='title', keep='first', inplace=True)
 
     # pre-process fields
     df['homepage'].fillna('', inplace=True)
