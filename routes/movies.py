@@ -95,8 +95,8 @@ def delete_movie_by_title(movie_title: str = Path(...)):
 
 
 @movies_router.get(path='/semantic-search', response_description='Semantic Search', response_model=MoviesSemanticSearchResponseSchema)
-def movies_semantic_search(prompt: str = Query(..., title='Search Prompt'),
-                           limit: int = Query(..., title='Limit returned documents')) -> MoviesSemanticSearchResponseSchema:
+def movies_semantic_search(prompt: str = Query(..., title='Search Prompt', max_length=64),
+                           limit: int = Query(..., title='Limit returned documents', ge=1, le=10)) -> MoviesSemanticSearchResponseSchema:
     semantic_search_prompt = MoviesSemanticSearchPromptSchema(prompt=prompt, limit=limit)
 
     # perform vector search

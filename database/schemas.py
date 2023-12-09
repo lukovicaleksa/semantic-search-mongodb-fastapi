@@ -98,8 +98,8 @@ class MoviesSemanticSearchPromptSchema(BaseModel):
     """
     Prompt Schema for Movies Semantic Search
     """
-    prompt: str = Field(...)
-    limit: int = Field(...)
+    prompt: str = Field(..., max_length=64)
+    limit: int = Field(..., ge=1, le=10)
 
     def generate_embedding_vector(self) -> List[float]:
         """
