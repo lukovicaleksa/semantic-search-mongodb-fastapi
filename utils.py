@@ -21,12 +21,12 @@ def is_db_movies_collection_initialized() -> bool:
 def initialize_db_movies_collection_from_dataset() -> int:
     """
     Initialize Movies collection using TMDB 5000 Movie Dataset from Kaggle (https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata)\n
-    Already downloaded and placed in data folder
+    Already downloaded and placed in data_source folder
 
     :return movies_inserted: Number of inserted movies
     """
     # load the dataset
-    df = pd.read_csv('data/tmdb_5000_movies.csv')
+    df = pd.read_csv('data_source/tmdb_5000_movies.csv')
 
     # drop rows with missing mandatory data
     df.dropna(subset=['title', 'overview'], inplace=True)
