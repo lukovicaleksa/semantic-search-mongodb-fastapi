@@ -37,6 +37,20 @@ class MovieBaseSchema(BaseModel):
         }
 
 
+class MovieWithIDSchema(MovieBaseSchema):
+    """
+    Movie Schema with ID
+    """
+    id: str = Field(..., alias='_id')
+
+    def __init__(self, **data: Any):
+        # convert ObjectID to str
+        if isinstance(data.get('_id'), ObjectId):
+            data['_id'] = str(data['_id'])
+
+        super().__init__(**data)
+
+
 class MovieWithEmbeddingSchema(MovieBaseSchema):
     """
     Movie Schema with Embedding Vector
@@ -78,20 +92,6 @@ class MovieWithEmbeddingSchema(MovieBaseSchema):
                        embedding=movie_embedding)
 
         return instance
-
-
-class MovieWithIDSchema(MovieBaseSchema):
-    """
-    Movie Schema with ID
-    """
-    id: str = Field(..., alias='_id')
-
-    def __init__(self, **data: Any):
-        # convert ObjectID to str
-        if isinstance(data.get('_id'), ObjectId):
-            data['_id'] = str(data['_id'])
-
-        super().__init__(**data)
 
 
 class MoviesSemanticSearchPromptSchema(BaseModel):
