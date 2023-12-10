@@ -75,3 +75,7 @@ To run the application, navigate to project root folder, activate your environme
 ```commandline
 python main.py
 ```
+
+**Note: At application startup the Database will be populated using TMDB 5000 Movies Dataset, 
+so this may take some time (up to 1 minute on my machine using CPU). 
+After Database is initialized, this step is skipped at application startup/reload**
