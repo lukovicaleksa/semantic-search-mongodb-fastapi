@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import uvicorn
 from contextlib import asynccontextmanager
 import logging
 import time
@@ -47,6 +48,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-
 # routers
 app.include_router(movies_router)
+
+if __name__ == '__main__':
+    uvicorn.run('main:app', host='127.0.0.1', port=8000, log_level='info', reload=True)
