@@ -1,0 +1,8 @@
+pydantic
+pydantic-settings
+pandas
+pymongo
+fastapi
+uvicorn
+sentence-transformers
+torch
