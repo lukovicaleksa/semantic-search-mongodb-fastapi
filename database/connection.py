@@ -15,7 +15,7 @@ class MongoDBAtlasConnection:
         :param host: Mongo DB Hostname
         :param db_name: DB name
         """
-        self.connection_str = f'mongodb+srv://{username}:{password}@{host}/?retryWrites=true&w=majority'
+        self.connection_str = f'mongodb+srv://{username}:{password}@{host}'
         self.db_name = db_name
         self.client = None
         self.db = None

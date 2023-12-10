@@ -15,7 +15,7 @@ mongodb_connection.connect()
 db = mongodb_connection.get_db()
 
 # collections
-db_movies_collection = db.get_collection('movies')
+db_movies_collection = db.get_collection(settings.MONGODB_ATLAS_MOVIES_COLLECTION_NAME)
 
 # indexes
 db_movies_collection.create_index([('title', ASCENDING)], unique=True)
