@@ -23,26 +23,47 @@ This project works with the data from [TMDB 5000 Movie Dataset from Kaggle](http
 The steps to get the project up and running are:
 
 1. Clone the repository to your local machine
-2. MongoDB Atlas setup
+2. MongoDB Atlas Cluster setup
    1. Create account on MongoDB Atlas (if you don't already have one) and log in
    2. Create a new project and deploy a free cluster
    3. Add database user and save credentials (username and password)
    4. Get connection string, should look like this: `mongodb+srv://<username>:<password>@<host>/?retryWrites=true&w=majority`, part after host is optional
-3. Create a .env file in project root and fill in with your user credentials and host from the MongoDB connection string, vector search index name can be chosen arbitrarily
+3. MongoDB Atlas Vector Search setup
+   1. Find deployed cluster in the Database section and create a database called 'semantic_search' with 'movies' collection in it
+   2. Create a vector search index with name 'moviesVectorSearch' and link it to created collection. For Index definition use the following JSON Editor:
+   ```json
+   {
+     "mappings": {
+       "dynamic": true,
+       "fields": {
+         "embedding": {
+           "dimensions": 384,
+           "similarity": "cosine",
+           "type": "knnVector"
+         }
+       }
+     }
+   }
+   ```
+4. Create a .env file in project root and fill in with your user credentials and host from the MongoDB connection string. Fill in the DB name, movies collection name and search index name as you named them in MongoDB Atlas
    ``` dotenv
    # MongoDB Atlas Credentials
    MONGODB_ATLAS_USERNAME=<username>
    MONGODB_ATLAS_PASSWORD=<password>
    MONGODB_ATLAS_HOST=<host>
    
+   # MongoDB Atlas Database
+   MONGODB_ATLAS_DB_NAME=semantic_search
+   MONGODB_ATLAS_MOVIES_COLLECTION_NAME=movies
+   
    # MongoDB Atlas Vector Search
    MONGODB_ATLAS_MOVIES_VECTOR_SEARCH_INDEX_NAME=moviesVectorSearch
    ```
-4. Create Python virtual environment with version 3.11 (should work with older versions like 3.10 and 3.9)
+5. Create Python virtual environment with version 3.11 (should work with older versions like 3.10 and 3.9)
    ``` commandline
    conda create --name your_environment_name python=3.11
    ```
-5. Activate the environment and install the packages
+6. Activate the environment and install the packages
    ``` commandline
    conda activate your_environment_name
    pip install -r requirements.txt
