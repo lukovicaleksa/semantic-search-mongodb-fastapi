@@ -17,6 +17,7 @@ This project works with the data from [TMDB 5000 Movie Dataset from Kaggle](http
 
 - Python Environment management tool like conda or venv
 - MongoDB Atlas account
+- MongoDB Atlas cluster v6.0.11, v7.0.2, or later 
 
 ## Setup
 
