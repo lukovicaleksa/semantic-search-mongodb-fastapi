@@ -4,7 +4,7 @@ from pymongo.errors import DuplicateKeyError
 
 from config import settings
 from database.collections import db_movies_collection
-from database.schemas import MovieBaseSchema, MovieWithEmbeddingSchema, MovieWithIDSchema, \
+from database.schemas import MovieBaseSchema, MovieBaseWithExampleSchema, MovieWithEmbeddingSchema, MovieWithIDSchema, \
     MoviesSemanticSearchPromptSchema, MoviesSemanticSearchResponseSchema
 
 
@@ -16,7 +16,7 @@ movies_router = APIRouter(prefix='/movies', tags=['movies'])
     status_code=status.HTTP_201_CREATED,
     response_model=MovieWithIDSchema
 )
-def insert_movie(movie: MovieBaseSchema = Body(...)) -> MovieWithIDSchema:
+def insert_movie(movie: MovieBaseWithExampleSchema = Body(...)) -> MovieWithIDSchema:
     movie_with_embedding = MovieWithEmbeddingSchema.from_base_schema(movie)
     try:
         res = db_movies_collection.insert_one(movie_with_embedding.model_dump())

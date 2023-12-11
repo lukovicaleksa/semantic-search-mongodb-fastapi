@@ -22,6 +22,15 @@ class MovieBaseSchema(BaseModel):
 
     class Config:
         populate_by_name = True
+        json_schema_extra = None
+
+
+class MovieBaseWithExampleSchema(MovieBaseSchema):
+    """
+    Movie Base Schema for Get method
+    """
+    class Config:
+        populate_by_name = True
         json_schema_extra = {
             "example": {
                 "title": "The Lord of the Rings: The Rise of a New Power",
