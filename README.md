@@ -28,7 +28,8 @@ The steps to get the project up and running are:
    1. Create account on MongoDB Atlas (if you don't already have one) and log in
    2. Create a new project and deploy a free cluster
    3. Add database user and save credentials (username and password)
-   4. Get connection string, should look like this: `mongodb+srv://<username>:<password>@<host>/?retryWrites=true&w=majority`, part after host is optional
+   4. Whitelist your current IP address
+   5. Get connection string, should look like this: `mongodb+srv://<username>:<password>@<host>/?retryWrites=true&w=majority`, part after host is optional
 3. MongoDB Atlas Vector Search setup
    1. Find deployed cluster in the Database section and create a database called 'semantic_search' with 'movies' collection in it
    2. Create a vector search index with name 'moviesVectorSearch' and link it to created collection. For Index definition use the following JSON Editor:
