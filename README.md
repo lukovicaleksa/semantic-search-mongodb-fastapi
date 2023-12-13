@@ -8,8 +8,8 @@ This project demonstrates how you can enhance standard CRUD operations in your a
 
 Open-Source [Sentence Transformers from Hugging Face](https://huggingface.co/sentence-transformers) are used for creation of Embedding Vectors, which are stored directly in MongoDB documents and are used in Semantic Search.
 
-Application implementation is done in Python using [FastAPI framework](https://fastapi.tiangolo.com/), it heavily relies on [Pymongo](https://www.mongodb.com/docs/drivers/pymongo/) for communication with MongoDB and on [Pydantic](https://docs.pydantic.dev/latest/) for data modeling and validation.
-All neccessary data processing needed for Semantic Search like data vectorization and storage managing is encapsulated and hidden from the API user, which makes standard CRUD operations easy to use.
+Application implementation is done in Python using the [FastAPI framework](https://fastapi.tiangolo.com/), it heavily relies on [Pymongo](https://www.mongodb.com/docs/drivers/pymongo/) for communication with MongoDB and on [Pydantic](https://docs.pydantic.dev/latest/) for data modeling and validation.
+All necessary data processing needed for Semantic Search (data vectorization and storage managing) is encapsulated and hidden from the API user, which makes standard CRUD operations easy to use.
 
 This project works with the data from [TMDB 5000 Movie Dataset from Kaggle](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata).
 
