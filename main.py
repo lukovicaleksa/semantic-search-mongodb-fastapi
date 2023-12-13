@@ -16,7 +16,7 @@ def app_startup_event_handler():
     """
     Function called at application startup - before receiving requests
     """
-    logger.info('Initializing Movies collection from dataset ...')
+    logger.info('Initializing Movies collection from TMDB 5000 Movie dataset ...')
 
     if is_db_movies_collection_initialized():
         logger.info('Collection already initialized')
