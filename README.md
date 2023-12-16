@@ -78,6 +78,12 @@ To run the application, navigate to project root folder, activate your environme
 python main.py
 ```
 
-**Note: At application startup the Database will be populated using TMDB 5000 Movies Dataset from [data_source](data_source) folder, 
+**Notes:**
+- **At application startup the Database will be populated using TMDB 5000 Movies Dataset from [data_source](data_source) folder, 
 so this may take some time (up to 1 minute on my machine using CPU). 
-After Database is initialized, this step is skipped at application startup/reload**
+After Database is initialized, this step is skipped at application startup/reload.**
+
+
+- **During the initial run of the application, the [all-miniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) 
+model needs to be downloaded from the Hugging Face Hub, which also takes some time. 
+For subsequent executions, the model will be loaded from cache.**
