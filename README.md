@@ -70,6 +70,8 @@ The steps to get the project up and running are:
 6. Activate the environment and install the packages
    ``` commandline
    conda activate your_environment_name
+   ```
+   ``` commandline
    pip install -r requirements.txt
    ```
 
