@@ -1,5 +1,7 @@
 # Semantic Search with MongoDB and FastAPI
 
+**For more details refer to the blog post: [Semantic Search with MongoDB and FastAPI: Comprehensive Guide](https://medium.com/@lukovic.aleksa96/semantic-search-with-mongodb-and-fastapi-comprehensive-guide-204bb7ba95e2).**
+
 ## Description
 
 This project demonstrates how you can enhance standard CRUD operations in your application using Semantic Search mechanism.
