@@ -22,15 +22,6 @@ class MovieBaseSchema(BaseModel):
 
     class Config:
         populate_by_name = True
-        json_schema_extra = None
-
-
-class MovieBaseWithExampleSchema(MovieBaseSchema):
-    """
-    Movie Base Schema for Get method
-    """
-    class Config:
-        populate_by_name = True
         json_schema_extra = {
             "example": {
                 "title": "The Lord of the Rings: The Rise of a New Power",
@@ -50,21 +41,25 @@ class MovieWithIDSchema(MovieBaseSchema):
     """
     Movie Schema with ID
     """
-    id: str = Field(..., alias='_id')
+    id: ObjectId = Field(default_factory=ObjectId, description="Unique Object ID")
+    created_at: datetime = Field(default_factory=datetime.now, description="Date when the record was created (day, month, year)")
+    updated_at: datetime = Field(default_factory=datetime.now, description="Date when the record was last updated (day, month, year)")
 
-    def __init__(self, **data: Any):
-        # convert ObjectID to str
-        if isinstance(data.get('_id'), ObjectId):
-            data['_id'] = str(data['_id'])
+    def model_dump(self, **kwargs):
+        data = super().model_dump(**kwargs)
+        if 'id' in data:
+            data['_id'] = data.pop('id')
+        return data
 
-        super().__init__(**data)
+    class Config:
+        arbitrary_types_allowed = True
 
 
-class MovieWithEmbeddingSchema(MovieBaseSchema):
+class MovieWithEmbeddingSchema(MovieWithIDSchema):
     """
     Movie Schema with Embedding Vector
     """
-    embedding: List[float] = Field(..., min_items=embedding_vector_length, max_items=embedding_vector_length)
+    embedding: List[float] = Field(..., min_length=embedding_vector_length, max_length=embedding_vector_length)
 
     def __init__(self, **data: Any):
         # calculate movie embedding based on movie title and overview

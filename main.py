@@ -46,7 +46,14 @@ async def lifespan(app: FastAPI):
     app_shutdown_event_handler()
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    title="MongoDB Atlas Semantic Search",
+    description="Demo Application - Semantic Search with MongoDB Atlas and FastAPI",
+    version="0.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    lifespan=lifespan
+)
 
 # routers
 app.include_router(movies_router)

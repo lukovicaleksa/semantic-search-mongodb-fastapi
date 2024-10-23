@@ -16,14 +16,16 @@ INFERENCE_DEVICE = TorchDevice.AUTO
 # force usage of CPU/GPU (if available)
 if INFERENCE_DEVICE == TorchDevice.CPU:
     # CPU inference
-    selected_inference_device = TorchDevice.CPU.value
+    selected_inference_device = TorchDevice.CPU
 elif INFERENCE_DEVICE == TorchDevice.GPU and torch.cuda.is_available():
     # GPU inference
-    selected_inference_device = TorchDevice.GPU.value
+    selected_inference_device = TorchDevice.GPU
+    # clear GPU cache
+    torch.cuda.empty_cache()
 else:
     # AUTO inference
-    selected_inference_device = TorchDevice.AUTO.value
+    selected_inference_device = TorchDevice.AUTO
 
 
-embedding_model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2', device=selected_inference_device)
+embedding_model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2', device='cuda')
 embedding_vector_length = embedding_model.get_sentence_embedding_dimension()
