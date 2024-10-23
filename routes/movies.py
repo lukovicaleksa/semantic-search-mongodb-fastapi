@@ -6,8 +6,8 @@ from pymongo.errors import DuplicateKeyError
 
 from config import settings
 from database.collections import db_movies_collection
-from database.schemas import MovieBaseSchema, MovieWithEmbeddingSchema, MovieWithIDSchema, \
-    MoviesSemanticSearchPromptSchema, MoviesSemanticSearchResponseSchema
+from database.schemas import (MovieBaseSchema, MovieWithEmbeddingSchema, MovieWithIDSchema,
+                              MoviesSemanticSearchPromptSchema)
 
 
 movies_router = APIRouter(prefix='/movies', tags=['movies'])
@@ -161,7 +161,7 @@ def delete_movie_by_title(movie_title: str = Query(...)):
 
 @movies_router.get(
     path='/semantic-search',
-    response_model=MoviesSemanticSearchResponseSchema,
+    response_model=list[MovieBaseSchema],
     status_code=status.HTTP_200_OK
 )
 def movies_semantic_search(prompt: str = Query(..., title='Search Prompt', max_length=64),
@@ -181,15 +181,7 @@ def movies_semantic_search(prompt: str = Query(..., title='Search Prompt', max_l
                 'numCandidates': semantic_search_prompt.get_optimal_number_of_search_candidates(),
                 'limit': semantic_search_prompt.limit,
             }
-        },
-        {
-            '$project': {
-                'title': 1,
-                'overview': 1,
-                'genres': 1
-            }
         }
     ])
 
-    movies_semantic_search_response = {'movies': [movie for movie in res]}
-    return MoviesSemanticSearchResponseSchema(**movies_semantic_search_response)
+    return [MovieBaseSchema(**movie) for movie in res]

@@ -122,18 +122,3 @@ class MoviesSemanticSearchPromptSchema(BaseModel):
         :return: Number of candidates
         """
         return 20 * self.limit
-
-
-class MoviesSemanticSearchResponseSchema(BaseModel):
-    """
-    Response Schema for Movies Semantic Search
-    """
-    class SimplifiedMovieSchema(BaseModel):
-        """
-        Simplified Movie Schema used for Semantic Search response
-        """
-        title: str = Field(...)
-        overview: str = Field(...)
-        genres: Optional[List[str]] = Field(None)
-
-    movies: List[SimplifiedMovieSchema] = Field(...)
